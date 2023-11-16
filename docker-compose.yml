@@ -1,11 +1,11 @@
 version: "3.8"
 services:
-  scraper:
-    build: .
-    depends_on:
-      - minio
-      - zookeeper
-      - broker
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
 
   minio:
     image: minio/minio:RELEASE.2020-10-18T21-54-12Z
@@ -19,13 +19,6 @@ services:
       - 8050:9000
     volumes:
       - ./volumes/minio:/export
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
 
   broker:
     image: confluentinc/cp-kafka:7.0.1
@@ -42,3 +35,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  scraper:
+    build: .
+    depends_on:
+      - minio
+      - zookeeper
+      - broker

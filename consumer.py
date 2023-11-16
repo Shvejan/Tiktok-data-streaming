@@ -12,5 +12,8 @@ consumer = KafkaConsumer(
 
 for message in consumer:
     print(f"Received message: {message.value}")
+    print("\n")
+    print("\n")
+    print("\n")
 
 consumer.close()
