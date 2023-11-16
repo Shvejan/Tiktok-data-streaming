@@ -9,6 +9,13 @@ import datetime
 import re
 from selenium.webdriver.chrome.options import Options
 import json
+from kafka import KafkaProducer
+
+
+producer = KafkaProducer(
+    bootstrap_servers=["broker:9092"],  # Change as per your Kafka broker address
+    value_serializer=lambda v: json.dumps(v).encode("utf-8"),
+)
 
 
 def randomSleep(x):
@@ -142,6 +149,7 @@ def open_webpage(count):
                 "RawData": RawData,
             }
             print(videoData)
+            producer.send("video_data", videoData)
             data_list.append(videoData)
             # put the data inside a json file
             print("\n")
@@ -155,14 +163,8 @@ def open_webpage(count):
         open_webpage(count)
 
     finally:
-        print("/n")
-        print("/n")
-        print(data_list)
-        print("/n")
-        json_data = json.dumps(data_list, indent=2)
-        with open("video_data.json", "w") as json_file:
-            json.dump(data_list, json_file, indent=2)
         driver.quit()
+        producer.flush()
 
 
 if __name__ == "__main__":
