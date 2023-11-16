@@ -8,5 +8,6 @@ COPY . /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt
+RUN chmod +x /wait-for.sh
 
-CMD ["python3", "producer.py"]
+CMD ["/bin/sh", "-c", "/wait-for.sh broker:29092 minio:9000 -- python3 scrapper.py"]

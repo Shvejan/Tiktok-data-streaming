@@ -13,7 +13,7 @@ from kafka import KafkaProducer
 
 
 producer = KafkaProducer(
-    bootstrap_servers=["broker:9092"],  # Change as per your Kafka broker address
+    bootstrap_servers=["broker:29092"],  # Change as per your Kafka broker address
     value_serializer=lambda v: json.dumps(v).encode("utf-8"),
 )
 
@@ -88,7 +88,7 @@ def open_webpage(count):
             print("escaped!")
             pass
 
-        for i in range(count, 1):
+        for i in range(count, 10):
             try:
                 botDetector = driver.find_element(
                     By.XPATH, '//div[@id="tiktok-verify-ele"]'
@@ -150,6 +150,8 @@ def open_webpage(count):
             }
             print(videoData)
             producer.send("video_data", videoData)
+            producer.flush()
+
             data_list.append(videoData)
             # put the data inside a json file
             print("\n")
@@ -164,7 +166,6 @@ def open_webpage(count):
 
     finally:
         driver.quit()
-        producer.flush()
 
 
 if __name__ == "__main__":
