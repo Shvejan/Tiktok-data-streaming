@@ -1,5 +1,6 @@
 from kafka import KafkaProducer
 import json
+import time
 
 
 producer = KafkaProducer(
@@ -9,6 +10,7 @@ producer = KafkaProducer(
 
 data = {"key": "value"}  # Your data here
 
-for i in range(3):
+while True:
+    time.sleep(1)
     producer.send("video_data", data)
-producer.flush()
+    producer.flush()
