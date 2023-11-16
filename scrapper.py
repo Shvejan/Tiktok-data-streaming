@@ -88,7 +88,7 @@ def open_webpage(count):
             print("escaped!")
             pass
 
-        for i in range(count, 10):
+        for i in range(count, 100):
             try:
                 botDetector = driver.find_element(
                     By.XPATH, '//div[@id="tiktok-verify-ele"]'
@@ -153,7 +153,6 @@ def open_webpage(count):
             producer.flush()
 
             data_list.append(videoData)
-            # put the data inside a json file
             print("\n")
 
             click_by_xpath(driver, '//button[@aria-label="Go to next video"]')
