@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  scraper:
+    build: .
+    environment:
+      KAFKA_BROKER: kafka:9092
+
+  kafka:
+    image: bitnami/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+  minio:
+    image: minio/minio:RELEASE.2020-10-18T21-54-12Z
+    command: ["server", "/export"]
+    environment:
+      - MINIO_ACCESS_KEY=minioaccesskey
+      - MINIO_SECRET_KEY=miniosecretkey
+    healthcheck:
+      disable: true
+    ports:
+      - 8050:9000
+    volumes:
+      - ./volumes/minio:/export
