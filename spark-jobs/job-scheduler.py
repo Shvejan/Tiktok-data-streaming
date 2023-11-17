@@ -13,7 +13,7 @@ from cassandra.cluster import Cluster
 
 def connect_to_cassandra():
     cluster = Cluster(
-        ["localhost"]
+        ["cassandra"]
     )  # Change this to the address of your Cassandra instance
     session = cluster.connect()
     return session
@@ -139,7 +139,7 @@ def bytes_to_dict(byte_data):
 
 
 if __name__ == "__main__":
-    minio_endpoint = "localhost:8050"
+    minio_endpoint = "minio:9000"
     minio_access_key = "minioaccesskey"
     minio_secret_key = "miniosecretkey"
     secure = False
