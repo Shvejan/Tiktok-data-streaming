@@ -95,7 +95,7 @@
                 <h2>Data Analatics Dashboard</h2>
                 {% if row_count is not none %}
                     <div style="text-align: right;">
-                        <p>Count: {{ row_count }}</p>
+                        <p>Total Entries in the Database: {{ row_count }}</p>
                     </div>
                 {% endif %}
             </div>
@@ -140,8 +140,9 @@
         {% else %}
         <div>
             <h5>Example search inputs</h5>
-            <p>SELECT * FROM TABLE</p>
+            <p>SELECT count(*) FROM TABLE</p>
             <p>select * from TABLE</p>
+            <p>select Account, likes from TABLE</p>
         </div>
 
         {% endif %}
