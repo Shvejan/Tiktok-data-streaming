@@ -12,9 +12,14 @@ from cassandra.cluster import Cluster
 
 
 def connect_to_cassandra():
-    cluster = Cluster(["cassandra"])
-    session = cluster.connect()
-    return session
+    try:
+        cluster = Cluster(["cassandra"])
+        session = cluster.connect()
+        return session
+    except:
+        print("sleeping")
+        time.sleep(20)
+        return connect_to_cassandra()
 
 
 def create_keyspace(session, keyspace):
