@@ -191,7 +191,7 @@ def open_webpage(count):
             return
 
         except:
-            print("escaped!")
+            # print("escaped!")
             pass
 
         while True:
@@ -243,10 +243,11 @@ def open_webpage(count):
 
             keyword_found = False
             for w in fashion_keywords:
-                if w.lower() in RawData.lower():
+                if w.lower() in Caption.lower():
                     keyword_found = True
                     break
             if keyword_found == False:
+                print("skipping video")
                 click_by_xpath(driver, '//button[@aria-label="Go to next video"]')
                 continue
 

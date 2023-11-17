@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #ffffff;
+            color: black;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+        header h1 {
+            margin: 0;
+            padding-bottom: 10px;
+        }
+        .button {
+            height: 34px;
+            background: #e8491d;
+            border: 0;
+            padding-left: 20px;
+            padding-right: 20px;
+            color: #ffffff;
+        }
+        .search-box {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .table-container {
+            overflow-x: auto; /* Horizontal scrolling */
+            overflow-y: auto; /* Vertical scrolling */
+            max-height: 400px; /* Adjust this value as needed */
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+        table, th, td {
+            font-size: 0.9em; /* Reduced font size */
+            border: 1px solid #ddd;
+            padding: 1px;
+            text-align: left;
+        }
+        th, td {
+            padding: 1px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .ellipsis {
+            max-width: 15px; /* Adjust as needed */
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .logo {
+            display: block;
+            max-width: 200px; /* Adjust the size as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin: 0 auto; /* Center the image */
+            padding: 10px 0; /* Add some padding above and below the image */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        
+        <div class="container">
+            
+            <img src="https://finesse.us/cdn/shop/files/Finesse-Logo_Black_c2433d9b-ecf4-4056-bc0c-6d8138f4e63a.png?v=1675701658&width=500" class="logo"></img>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Data Analatics Dashboard</h2>
+                {% if row_count is not none %}
+                    <div style="text-align: right;">
+                        <p>Count: {{ row_count }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </header>
+
+
+    <div class="container">
+        <form method="POST">
+            <input type="text" name="search" value="{{ user_query }}" class="search-box">
+            <input type="submit" value="Search" class="button">
+        </form>
+
+        {% if error_message %}
+            <p>Error: {{ error_message }}</p>
+        {% endif %}
+
+        {% if results %}
+            <div class="table-container">
+                <table>
+                    {% if results|length > 0 %}
+                        <!-- Generate column headers -->
+                        <tr>
+                            {% for col in results[0].keys() %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+
+                    <!-- Generate table rows -->
+                    {% for row in results %}
+                        <tr>
+                            {% for value in row.values() %}
+                            <td class="ellipsis">{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+        <div>
+            <h5>Example search inputs</h5>
+            <p>SELECT * FROM TABLE</p>
+            <p>select * from TABLE</p>
+        </div>
+
+        {% endif %}
+    </div>
+</body>
+</html>

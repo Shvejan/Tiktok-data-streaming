@@ -77,3 +77,14 @@ services:
         condition: service_healthy
       broker:
         condition: service_healthy
+
+  data-analytics-tool:
+    build:
+      context: ./flask-server
+    ports:
+      - 5001:5001
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
