@@ -82,7 +82,7 @@ services:
     build:
       context: ./flask-server
     ports:
-      - 5001:5001
+      - 3000:3000
     depends_on:
       zookeeper:
         condition: service_healthy
