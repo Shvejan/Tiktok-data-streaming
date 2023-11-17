@@ -17,6 +17,112 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode("utf-8"),
 )
 
+fashion_keywords = [
+    "Fashion",
+    "Style",
+    "Trend",
+    "Outfit",
+    "OOTD",
+    "Lookbook",
+    "Streetwear",
+    "Haul",
+    "Fashionista",
+    "Wardrobe",
+    "Accessory",
+    "Couture",
+    "Vintage",
+    "Glam",
+    "Chic",
+    "Runway",
+    "Designer",
+    "Fashionable",
+    "Apparel",
+    "Beauty",
+    "Makeup",
+    "Hairstyle",
+    "Fashionblog",
+    "Fashiondiaries",
+    "Fashioninspiration",
+    "Streetstyle",
+    "Model",
+    "Catwalk",
+    "Fashiontrends",
+    "Styleinspo",
+    "Fashionforward",
+    "Fashiondaily",
+    "Instafashion",
+    "Styleoftheday",
+    "Fashiondesign",
+    "Fashionweek",
+    "Luxury",
+    "Accessories",
+    "Fashionphotography",
+    "Fashionable",
+    "Lookoftheday",
+    "Trendsetter",
+    "Wardrobeessentials",
+    "Instastyle",
+    "Fashiongoals",
+    "Fashionlover",
+    "Fashionaddict",
+    "Fashionstyle",
+    "Styleblogger",
+    "Fashionblogger",
+    "Fashioninsider",
+    "Glamour",
+    "Runwayshow",
+    "Fashionicon",
+    "Fashiondesigner",
+    "Streetfashion",
+    "Styleguide",
+    "Fashionable",
+    "Fashionstatement",
+    "Streetstyleinspiration",
+    "Couturefashion",
+    "Fashionforward",
+    "Styletips",
+    "Fashiondetails",
+    "Trendy",
+    "Fashionootd",
+    "Fashioninsiders",
+    "Highfashion",
+    "Fashionlook",
+    "Fashioninspirations",
+    "Fashiondaily",
+    "Fashionwatch",
+    "Trendingfashion",
+    "Fashionpost",
+    "Fashiondaily",
+    "Stylefile",
+    "Fashionootd",
+    "Chicstyle",
+    "Fashionbloggers",
+    "Fashionphoto",
+    "Stylecheck",
+    "Fashionstudy",
+    "Fashionmoment",
+    "Stylecrush",
+    "Fashionphotographer",
+    "Glamorous",
+    "Stylebook",
+    "Fashionphotography",
+    "Styleinspiration",
+    "Trendyfashion",
+    "Fashionforward",
+    "Fashionphotographer",
+    "Styleguide",
+    "Fashiongoals",
+    "Trendsetter",
+    "Fashiontrends",
+    "Fashiondesigner",
+    "Styleoftheday",
+    "Fashiondiaries",
+    "Fashioninspo",
+    "haloween",
+    "club",
+    "party",
+]
+
 
 def randomSleep(x):
     time.sleep(x + 2 * (random.random() - 0.5))
@@ -88,7 +194,7 @@ def open_webpage(count):
             print("escaped!")
             pass
 
-        for i in range(count, 100):
+        while True:
             try:
                 botDetector = driver.find_element(
                     By.XPATH, '//div[@id="tiktok-verify-ele"]'
@@ -134,6 +240,15 @@ def open_webpage(count):
             RawData = get_element(
                 driver, By.XPATH, '//div[@data-e2e="search-comment-container"]'
             ).text
+
+            keyword_found = False
+            for w in fashion_keywords:
+                if w.lower() in RawData.lower():
+                    keyword_found = True
+                    break
+            if keyword_found == False:
+                click_by_xpath(driver, '//button[@aria-label="Go to next video"]')
+                continue
 
             # Date Views
             videoData = {
