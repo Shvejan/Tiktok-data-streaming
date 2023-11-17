@@ -1,11 +1,16 @@
-Steps to run the project
+![Data Pipeline Architecture](./Data-Pipeline.jpg)
 
-1. make sure you have docker installed
-2. run "docker-compose up"
+### Steps to Run the Project
 
-file and folder descriptions:
+1. Make sure you have Docker installed.
+2. Run the following command:
+   ```bash
+   docker-compose up
+   ```
 
-1. scrapper.py -> web scraper built using selenium
-2. ./spark-jobs/job-scheduler.py -> batch processing script
-3. ./kafka-consumer/consumer.py -> kafka consumer script to store batch data in MinIO
-4. ./flask-server/app.py -> flask server
+### File and Folder Descriptions
+
+1. scrapper.py: Web scraper built using Selenium.
+2. spark-jobs/job-scheduler.py: Batch processing script.
+3. kafka-consumer/consumer.py: Kafka consumer script to store batch data in MinIO.
+4. flask-server/app.py: Flask server.
