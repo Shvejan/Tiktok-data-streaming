@@ -241,17 +241,19 @@ def open_webpage(count):
                 driver, By.XPATH, '//div[@data-e2e="search-comment-container"]'
             ).text
 
+            # checking for keyword matches, comment out this section if the throughput of the scraper is very less
             keyword_found = False
             for w in fashion_keywords:
                 if w.lower() in Caption.lower():
                     keyword_found = True
                     break
             if keyword_found == False:
+                # if no keyword is matched, break out of loop
                 print("skipping video")
                 click_by_xpath(driver, '//button[@aria-label="Go to next video"]')
                 continue
 
-            # Date Views
+            # data in key value pairs
             videoData = {
                 "Account": Account,
                 "URL": URL,
@@ -265,7 +267,7 @@ def open_webpage(count):
                 "RawData": RawData,
             }
             print(videoData)
-            producer.send("video_data", videoData)
+            producer.send("video_data", videoData)  # pushing data to kafka
             producer.flush()
 
             data_list.append(videoData)

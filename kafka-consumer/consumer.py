@@ -43,12 +43,12 @@ count = 1
 print("waiting for messages....")
 for message in kafka_consumer:
     data.append(message.value)
-    if len(data) >= 10:
+    if len(data) >= 10:  # grouping the data in batches of 10
         print("output " + str(count) + " uploaded ")
         with open(json_file_path, "w") as file:
             json.dump(data, file)
 
-        minio_client.fput_object(
+        minio_client.fput_object(  # uploading json data into minio s3 bucket
             bucket_name, "output" + str(count) + ".json", json_file_path
         )
         count += 1

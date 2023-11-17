@@ -19,8 +19,6 @@ def connect_duckdb():
 
 conn = connect_duckdb()
 
-# The path to your Parquet file
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():

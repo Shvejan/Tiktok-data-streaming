@@ -12,9 +12,7 @@ from cassandra.cluster import Cluster
 
 
 def connect_to_cassandra():
-    cluster = Cluster(
-        ["cassandra"]
-    )  # Change this to the address of your Cassandra instance
+    cluster = Cluster(["cassandra"])
     session = cluster.connect()
     return session
 
@@ -144,17 +142,21 @@ if __name__ == "__main__":
     minio_secret_key = "miniosecretkey"
     secure = False
 
-    minio_client = Minio(
+    minio_client = Minio(  # minio client setup
         minio_endpoint,
         access_key=minio_access_key,
         secret_key=minio_secret_key,
         secure=secure,
     )
 
-    staging_bucket = "video-data-bucket"
-    querying_bucket = "query-bucket"
+    staging_bucket = "video-data-bucket"  # staging bucket name
+    querying_bucket = "query-bucket"  # analytics bucket name
+
+    # creating buckets if not exist
     create_bucket(minio_client, staging_bucket)
     create_bucket(minio_client, querying_bucket)
+
+    # creating parquet file if not exist already
     try:
         minio_client.stat_object(querying_bucket, "db.parquet")
         print(f"The file  already exists in the bucket .")
@@ -163,16 +165,18 @@ if __name__ == "__main__":
         minio_client.fput_object(querying_bucket, "db.parquet", "./db.parquet")
         print("file crated")
 
-    keyspace = "finesse"  # Change this to your desired keyspace name
-    table = "posts_data"  # Change this to your desired table name
+    keyspace = "finesse"
+    table = "posts_data"
 
-    session = connect_to_cassandra()
+    session = connect_to_cassandra()  # connecting to cassandra db
     create_keyspace(session, keyspace)
     session.set_keyspace(keyspace)
     create_table(session, keyspace, table)
 
     while True:
-        while list_files(minio_client, staging_bucket) == 0:
+        while (
+            list_files(minio_client, staging_bucket) == 0
+        ):  # waiting for json files to get uploaded to MinIO by Kafka consumer
             print("waiting for files to upload...")
             time.sleep(600)
 
@@ -180,7 +184,7 @@ if __name__ == "__main__":
 
         if file_data is not None:
             for post_data in bytes_to_dict(file_data):
-                post_data["Score"] = random.randint(30, 100)
+                post_data["Score"] = random.randint(30, 100)  # generating random score
                 insert_data(session, keyspace, table, post_data)
                 parquet_data = minio_client.get_object(querying_bucket, "db.parquet")
                 parquet_bytes = BytesIO(parquet_data.read())
