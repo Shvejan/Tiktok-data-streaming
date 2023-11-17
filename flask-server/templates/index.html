@@ -92,7 +92,7 @@
             
             <img src="https://finesse.us/cdn/shop/files/Finesse-Logo_Black_c2433d9b-ecf4-4056-bc0c-6d8138f4e63a.png?v=1675701658&width=500" class="logo"></img>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Data Analatics Dashboard</h2>
+                <h2>Data Analytics Dashboard</h2>
                 {% if row_count is not none %}
                     <div style="text-align: right;">
                         <p>Total Entries in the Database: {{ row_count }}</p>
@@ -139,10 +139,12 @@
             </div>
         {% else %}
         <div>
+            <h5>No Results Found</h5>
+
             <h5>Example search inputs</h5>
-            <p>SELECT count(*) FROM TABLE</p>
-            <p>select * from TABLE</p>
-            <p>select Account, likes from TABLE</p>
+            <p>SELECT COUNT(*) FROM TABLE</p>
+            <p>SELECT * from TABLE</p>
+            <p>SELECT Account, likes from TABLE</p>
         </div>
 
         {% endif %}
