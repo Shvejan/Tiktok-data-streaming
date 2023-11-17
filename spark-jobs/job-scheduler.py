@@ -8,6 +8,77 @@ from io import BytesIO
 import pandas as pd
 
 
+from cassandra.cluster import Cluster
+
+
+def connect_to_cassandra():
+    cluster = Cluster(
+        ["localhost"]
+    )  # Change this to the address of your Cassandra instance
+    session = cluster.connect()
+    return session
+
+
+def create_keyspace(session, keyspace):
+    session.execute(
+        f"""
+        CREATE KEYSPACE IF NOT EXISTS {keyspace}
+        WITH replication = {{
+            'class': 'SimpleStrategy',
+            'replication_factor': 1
+        }};
+    """
+    )
+
+
+def create_table(session, keyspace, table):
+    session.execute(
+        f"""
+        CREATE TABLE IF NOT EXISTS {keyspace}.{table} (
+            id UUID PRIMARY KEY,
+            account TEXT,
+            url TEXT,
+            likes TEXT,
+            comments TEXT,
+            saved TEXT,
+            caption TEXT,
+            hashtags TEXT,
+            date_collected TEXT,
+            date_posted TEXT,
+            raw_data TEXT,
+            score INT
+        );
+    """
+    )
+
+
+def insert_data(session, keyspace, table, data):
+    session.execute(
+        f"""
+        INSERT INTO {keyspace}.{table} (
+            id, account, url, likes, comments, saved, caption, hashtags,
+            date_collected, date_posted, raw_data, score
+        )
+        VALUES (
+            uuid(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+        );
+    """,
+        (
+            data["Account"],
+            data["URL"],
+            data["likes"],
+            data["comments"],
+            data["saved"],
+            data["Caption"],
+            str(data["Hashtags"]),
+            data["DateColected"],
+            data["DatePosted"],
+            data["RawData"],
+            data["Score"],
+        ),
+    )
+
+
 def list_files(minio_client, staging_bucket):
     count = 0
     try:
@@ -68,7 +139,7 @@ def bytes_to_dict(byte_data):
 
 
 if __name__ == "__main__":
-    minio_endpoint = "minio:9000"
+    minio_endpoint = "localhost:8050"
     minio_access_key = "minioaccesskey"
     minio_secret_key = "miniosecretkey"
     secure = False
@@ -92,16 +163,25 @@ if __name__ == "__main__":
         minio_client.fput_object(querying_bucket, "db.parquet", "./db.parquet")
         print("file crated")
 
+    keyspace = "finesse"  # Change this to your desired keyspace name
+    table = "posts_data"  # Change this to your desired table name
+
+    session = connect_to_cassandra()
+    create_keyspace(session, keyspace)
+    session.set_keyspace(keyspace)
+    create_table(session, keyspace, table)
+
     while True:
         while list_files(minio_client, staging_bucket) == 0:
             print("waiting for files to upload...")
-            time.sleep(5)
+            time.sleep(600)
 
         file_data = get_and_delete_first_file(minio_client, staging_bucket)
 
         if file_data is not None:
             for post_data in bytes_to_dict(file_data):
-                post_data["score"] = random.randint(30, 100)
+                post_data["Score"] = random.randint(30, 100)
+                insert_data(session, keyspace, table, post_data)
                 parquet_data = minio_client.get_object(querying_bucket, "db.parquet")
                 parquet_bytes = BytesIO(parquet_data.read())
 
@@ -112,3 +192,4 @@ if __name__ == "__main__":
                 minio_client.fput_object(
                     querying_bucket, "db.parquet", "./temp.parquet"
                 )
+        print("processed file")

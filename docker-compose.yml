@@ -2,7 +2,6 @@ version: "3.8"
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -22,12 +21,18 @@ services:
       disable: true
     ports:
       - 8050:9000
-    volumes:
-      - ./volumes/minio:/export
+
+  cassandra:
+    image: cassandra:latest
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+      - "7199:7199"
+      - "9042:9042"
+      - "9160:9160"
 
   broker:
     image: confluentinc/cp-kafka:7.0.1
-    container_name: broker
     ports:
       - "9092:9092"
     depends_on:
