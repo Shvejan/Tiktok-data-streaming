@@ -63,3 +63,12 @@ services:
         condition: service_healthy
       broker:
         condition: service_healthy
+
+  spark-job-scheduler:
+    build:
+      context: ./spark-jobs
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+      broker:
+        condition: service_healthy

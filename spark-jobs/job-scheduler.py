@@ -68,7 +68,7 @@ def bytes_to_dict(byte_data):
 
 
 if __name__ == "__main__":
-    minio_endpoint = "localhost:8050"
+    minio_endpoint = "minio:9000"
     minio_access_key = "minioaccesskey"
     minio_secret_key = "miniosecretkey"
     secure = False
