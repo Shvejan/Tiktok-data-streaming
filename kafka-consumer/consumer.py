@@ -2,6 +2,18 @@ from kafka import KafkaConsumer
 from minio import Minio
 import json
 import os
+from minio.error import S3Error
+
+
+def create_bucket(minio_client, staging_bucket):
+    try:
+        if not minio_client.bucket_exists(staging_bucket):
+            minio_client.make_bucket(staging_bucket)
+            print(f"Bucket '{staging_bucket}' created successfully.")
+
+    except S3Error as e:
+        print(f"Error: {e}")
+
 
 # Kafka Consumer Configuration
 kafka_consumer = KafkaConsumer(
@@ -20,7 +32,7 @@ minio_client = Minio(
     secure=False,  # Set to True for HTTPS
 )
 bucket_name = "video-data-bucket"
-
+create_bucket(minio_client, bucket_name)
 
 output_directory = "./output"
 os.makedirs(output_directory, exist_ok=True)
