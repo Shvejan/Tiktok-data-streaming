@@ -1,0 +1,11 @@
+Steps to run the project
+
+1. make sure you have docker installed
+2. run "docker-compose up"
+
+file and folder descriptions:
+
+1. scrapper.py -> web scraper built using selenium
+2. ./spark-jobs/job-scheduler.py -> batch processing script
+3. ./kafka-consumer/consumer.py -> kafka consumer script to store batch data in MinIO
+4. ./flask-server/app.py -> flask server
