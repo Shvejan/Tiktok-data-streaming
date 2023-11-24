@@ -34,7 +34,7 @@ services:
   broker:
     image: confluentinc/cp-kafka:7.0.1
     ports:
-      - "9092:9092"
+      - "29092:29092"
     depends_on:
       zookeeper:
         condition: service_healthy
